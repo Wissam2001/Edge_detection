@@ -258,7 +258,8 @@ def Do_Thresh_Hyst(img,TH,TL):
 def LOG():
     img = upload()
     img_array = RGB_gs(img)
-    T = int(retrieve_input(textBoxTH))
+    T = float(thresh_input) if '.' in thresh_input else int(thresh_input)
+    #T = int(retrieve_input(textBoxTH))
     #calculate the second derevative and smooth it
     sig = int(retrieve_input(textBoxsig))
     size = int(retrieve_input(textBoxsize))
@@ -303,8 +304,15 @@ def Canny_fct():
     thin_edge = non_max_suppression(gradient_magnitude, gradient_direction)
 
     #Step 4: Hysteresis Thresholding
-    TH = int(retrieve_input(textBoxTH))
-    TL = int(retrieve_input(textBoxTL))
+    # Get thresholds - can be integers or floats
+    th_input = retrieve_input(textBoxTH).strip()
+    TH = float(th_input)
+    
+    tl_input = retrieve_input(textBoxTL).strip()
+    TL = float(tl_input)
+    
+    #TH = int(retrieve_input(textBoxTH))
+    #TL = int(retrieve_input(textBoxTL))
     final_img = Do_Thresh_Hyst(thin_edge,TH,TL)
     display(final_img)
 
@@ -346,10 +354,14 @@ Ins.place(x =75, y= 570)
 radio = IntVar()
 
 
-def retrieve_input(textBox):
+'''def retrieve_input(textBox):
     inputValue=textBox.get("1.0",END)
     return inputValue
+'''
 
+def retrieve_input(textBox):
+    inputValue = textBox.get("1.0", END).strip()  # Remove whitespace and newlines
+    return inputValue
 
 T_shold = Label(root,text = 'Enter the threshold.',bg = '#D8BFD8')
 T_shold.place(x =520, y= 240)
